@@ -49,7 +49,7 @@ onMounted(() => {
             label-position="top"
         >
             
-            <h1> Nhập giá trị theo đề bài Optional </h1>
+            <h1> Nhập giá trị theo đề bài </h1>
             
             <el-form-item prop="inputA" class="box__input__cover" label="Nhập giá trị A (Cm)"> 
                 <el-input
@@ -71,10 +71,7 @@ onMounted(() => {
             <el-button v-show="!isChooseOptions" type="primary" @click="start()">
                Bắt đầu
             </el-button>
-            
-            <!-- <el-empty description="Cần nhập giá trị A và B"></el-empty> -->
         </el-form>
-        
     </div>
 </template>
   
@@ -105,7 +102,7 @@ onMounted(() => {
        top: 50%;
        left: 50%;
        transform: translate(-50%, -50%);
-       border-radius: 20px;
+       border-radius: var(--lg-radius-border);
        box-shadow: var(--primary-box-shadow);
        display: flex;
        flex-direction: column;

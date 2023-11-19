@@ -12,18 +12,37 @@ export const useCounterStore = defineStore({
     {
       key: 'inputA',
       paths: ['inputA'],
-      storage: localStorage,
+      storage: sessionStorage,
     },
     {
       key: 'inputB',
       paths: ['inputB'],
-      storage: localStorage,
+      storage: sessionStorage,
+    },
+    {
+      key: 'dataInput',
+      paths: ['dataInput'],
+      storage: sessionStorage,
     },
   ],
   state: () =>
   ({
     inputA: '',
     inputB: '',
+    
+    dataInput: {
+      U1: '',
+      U2: '',
+      S2: '',
+      k: '',
+      n: '',
+      J: '',
+      
+      // others
+      U2_1: '',
+      U2_2: '',
+      U2_3: '',
+    },
   }) as CounterRootState,
   
   
@@ -32,6 +51,118 @@ export const useCounterStore = defineStore({
   },
   
   actions: {
+    // socap
+  
+    handleCalcI1 () {
+      // I1= (S2/η*U1) (A)
+      const s2 = Number(this.dataInput.S2)
+      const n = Number(this.dataInput.n)
+      const U1 = Number(this.dataInput.U1)
+      const res = s2 / n * U1
+
+      return res
+    },
+    
+    handleN1() {
+      // N1 = Nv*U1 mà Nv =(45/B*At)
+      const At = Number(this.inputA * this.inputB)
+      const Nv = 45 / (this.inputB * At)
+      const res = Nv * this.dataInput.U1
+      
+      return res
+    },
+    
+    handleD1() {
+      // 1.128* căn bậc 2(I1/J)
+      const I1 = this.handleCalcI1()
+      const data = (I1 / this.dataInput.J)
+      const res = 1.128 * Math.sqrt(data)
+      
+      return res    
+    },
+    
+    
+    //thu cap
+    handleI2() {
+      // I2= (S2/U2) (A)
+      const res = (this.dataInput.S2 / this.dataInput.U2)
+      return res
+    },
+    
+    handleN1TC() {
+      // N2 = Nv*U2 mà Nv =(45/B*At)
+      const At = Number(this.inputA * this.inputB)
+      const Nv = 45 / (this.inputB * At)
+      const res = Nv * this.dataInput.U2
+      
+      return res
+    },
+    
+    handleD2() {
+      // d2 = 1.128* căn bậc 2(I2/J)
+      const I2 = this.handleI2()
+      const data = (I2 / this.dataInput.J)
+      const res = 1.128 * Math.sqrt(data)
+      
+      return res
+    },
+    
+    handleS1() {
+      // S1 = U1*I1(VA)
+      const U1 = Number(this.dataInput.U1)
+      const I1 = this.handleCalcI1()
+      const res = U1 * I1
+      
+      return res
+    },
+    
+    
+    // type 2 (NonReverse)
+    handleI2TypeTwo() {
+      // I2= (S2/U2) (A)
+      // Mà U2 = (U2-1)+ (U2-2)
+      const u2 = this.dataInput.U2_1 + this.dataInput.U2_2
+      const res = this.dataInput.S2 / u2
+      
+      return res
+    },
+    
+    handleN21() {
+      // N2 = Nv*U2-1 mà Nv =(45/B*At)
+      const At = this.inputA * this.inputB
+      
+      const Nv = 45 / (this.inputB * At)
+      const res = Nv * this.dataInput.U2_1
+      
+      return res
+    },
+    handleN22() {
+      // N2 = Nv*U2-2  mà Nv =(45/B*At)
+      const At = this.inputA * this.inputB
+      
+      const Nv = 45 / (this.inputB * At)
+      const res = Nv * this.dataInput.U2_2
+      
+      return res
+    },
+    handleN23() {
+      // N2 = Nv*U2-3mà Nv =(45/B*At)
+      const At = this.inputA * this.inputB
+      
+      const Nv = 45 / (this.inputB * At)
+      const res = Nv * this.dataInput.U2_3
+      
+      return res
+    },
+    
+    handleI2TypeThree() {
+      // I2= (S2/U2) (A)
+      // Mà U2 = (U2-1)+ (U2-2)+(U2-3)
+      const u2 = this.dataInput.U2_1 + this.dataInput.U2_2 + this.dataInput.U2_3
+      const res = this.dataInput.S2 / u2
+      
+      return res
+    },
   }
 })
 

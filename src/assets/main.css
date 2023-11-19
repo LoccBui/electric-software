@@ -10,6 +10,10 @@
 :root {
   --text-gray: #ccc;
   --primary-color: #284F9E;
+  
+  
+  --lg-radius-border: 20px;
+  --sm-radius-border: 5px;
 }
 
 .mb-sm {

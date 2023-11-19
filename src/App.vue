@@ -26,12 +26,13 @@ import { RouterLink, RouterView } from 'vue-router'
     &__cover {
        min-width: 50%;
        min-height: 50%;
+       max-height: 90%;
+       overflow-y: scroll;
        position: fixed;
        top: 50%;
        left: 50%;
        transform: translate(-50%, -50%);
-       border-radius: 20px;
-    //    box-shadow: var(--primary-box-shadow);
+       border-radius: var(--lg-radius-border);
        padding: 3%;
        background-color: white;
        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
 import router from '@/router'
 import { ref } from 'vue'
 
@@ -22,22 +21,28 @@ const reverseList = ref(
   ]
 )
 
-
-
 //Funtions
-const chooseReverseItem = (id: string) => {
-  router.push(`/reverse/${id}`)
+const chooseReverseItem = (item: Object) => {
+  guiStore.titleTopic = item.name
+  guiStore.typeTopic = `SC`
+  guiStore.numberTopic = item.id
+
+  router.push(`/reverse/${item.id}`)
 }
 
-const chooseNonReverseItem = (id: string) => {
-  router.push(`/non-reverse/${id}`)
+const chooseNonReverseItem = (item: Object) => {
+  guiStore.titleTopic = item.name
+  guiStore.typeTopic = `SC` + item.id
+  guiStore.numberTopic = item.id
+  
+  router.push(`/non-reverse/${item.id}`)
 }
 </script>
 
 <template>
 <div class="box__content__cover">
   
-  <el-page-header title="Quay lại" class="mb-sm" @back="guiStore.goBack('/')">
+  <el-page-header title="Quay lại" class="mb-sm" @back="guiStore.navigateTo('/')">
     <template #content>
       <span> Chọn dạng bài </span>
     </template>
@@ -48,7 +53,7 @@ const chooseNonReverseItem = (id: string) => {
   
   <div class="box__options__cover">
       <div 
-          @click="chooseNonReverseItem(item.id)"
+          @click="chooseNonReverseItem(item)"
           class="box__options__item" 
           v-for="(item, index) in noneReverseList" 
           :key="index"
@@ -66,7 +71,7 @@ const chooseNonReverseItem = (id: string) => {
           class="box__options__item" 
           v-for="(item, index) in reverseList" 
           :key="index" 
-          @click="chooseReverseItem(item.id)"
+          @click="chooseReverseItem(item)"
       >
           <el-button type="primary"> {{ item.name }}</el-button>                
       </div> 

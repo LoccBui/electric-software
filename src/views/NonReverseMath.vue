@@ -1,58 +1,29 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
 import { computed, onMounted, ref } from 'vue'
-import router from '@/router'
 
+import AvailableInput from '@/components/AvailableInput.vue'
+import NonReverseInputOne from '@/views/NonReverseInputOne.vue'
+import NonReverseInputTwo from '@/views/NonReverseInputTwo.vue'
+import NonReverseInputThree from '@/views/NonReverseInputThree.vue'
+
+import { useCounterStore } from '@/stores/counter'
 import { useGuiStore } from '@/stores/gui'
 
+import router from '@/router'
+
+
+const idTopic = Number(router.currentRoute.value.params.id)
 
 const guiStore = useGuiStore()
-
-const idTopic = router.currentRoute.value.params.id
-const material = ref(null)
-const selectedJ = ref(null)
-
-const materialList = ref(
-  [
-    {id: 1, value: 'Lá thép E có bề dày là 0.35mm'},
-    {id: 2, value: 'Lá thép E có bề dày là 0.5mm'},
-    {id: 3, value: 'Lá thép bị han rỉ và lồi lõm'}
-  ]
-)
-
-const JList = ref(
-  [
-    {id: 1, value: 'Công suất từ (0 - 50 VA) - J = 4(A/mm2)'},
-    {id: 2, value: 'Công suất từ ( 50 - 100VA) - J = 3.5 (A/mm2)'},
-    {id: 3, value: 'Công suất từ (100 - 200VA) - J = 3 (A/mm2)'},
-    {id: 4, value: 'Công suất từ ( 200 - 250VA) - J = 2.5 (A/mm2)'},
-    {id: 5, value: 'Công suất từ ( 500 - 1000VA) - J = 2 (A/mm2)'},
-  ]
-)
-
-const ruleForm = ref(
-  {
-    inputU1: '',
-    inputU2: '',
-    inputS2: '',
-  }
-)
-
-const rules = ref(
-  {
-    inputU1: [{ required: true, message: 'Bạn cần nhập giá trị U1', trigger: 'change'}],
-    inputU2: [{ required: true, message: 'Bạn cần nhập giá trị U2', trigger: 'change'}],
-    inputS2: [{ required: true, message: 'Bạn cần nhập giá trị S2', trigger: 'change'}],
-  }      
-)
-
+const counterStore = useCounterStore()
 </script>
 
 <template>
-<div>
-    <el-page-header title="Quay lại" class="mb-sm" @back="guiStore.goBack('/optional')">
+<div v-if="counterStore.inputA && counterStore.inputB">
+    <el-page-header title="Quay lại" class="mb-sm" @back="guiStore.navigateTo('/optional')">
       <template #content>
-        <span> Dạng bài toán thuận </span>
+        <span> Bài toán thuận | {{ guiStore.titleTopic }} </span>
       </template>
     </el-page-header>
 
@@ -61,77 +32,17 @@ const rules = ref(
         :model="ruleForm"
         :rules="rules"
         label-position="top"
-    >
-        
-        <h3> Nhập giá trị đầu vào </h3>
-        
-        <el-form-item prop="inputU1" label="Điện áp vào U1(Vol)"> 
-            <el-input
-                type="number"
-                placeholder="Giá trị U1 (Cm)"
-                autofocus 
-                v-model="ruleForm.inputU1" 
-                clearable  
-            />  
-        </el-form-item>
-        
-        <el-form-item prop="inputU2" label="Điện áp ra U2(Vol)"> 
-            <el-input
-                type="number"
-                placeholder="Giá trị U2 (Cm)"
-                v-model="ruleForm.inputU2" 
-                clearable   
-            />  
-        </el-form-item>
-        
-        <el-form-item prop="inputB" label="Công suất MBA (S2) (VA)"> 
-            <el-input
-                type="number"
-                placeholder="Giá trị S2 (Cm)"
-                v-model="ruleForm.inputS2" 
-                clearable   
-                @keyup.enter="confirm()"
-            />  
-        </el-form-item>
-        
-        <h3> Chọn vật liệu tấm lõi </h3>
-        
-        <el-select 
-          v-model="material" 
-          class="content__action"
-          placeholder="Chọn vật liệu tấm lõi" 
-          size="large">
-          <el-option
-            v-for="item in materialList"
-            :key="item.value"
-            :label="item.value"
-            :value="item.value"
-          />
-        </el-select>
-        
-        <el-select 
-          v-model="selectedJ" 
-          class="content__action"
-          placeholder="Hệ số mật độ J(A/mm)" 
-          size="large">
-          <el-option
-            v-for="item in JList"
-            :key="item.value"
-            :label="item.value"
-            :value="item.value"
-          />
-        </el-select>
-
-        
-        <el-button 
-            class="content__action"
-            v-show="!isChooseOptions" 
-            type="primary" 
-            size="large"
-            @click="confirm()"> Tính toán
-        </el-button>
+      > 
+        <AvailableInput />
+        <NonReverseInputOne v-if="idTopic === 1" />
+        <NonReverseInputTwo v-else-if="idTopic === 2" />
+        <NonReverseInputThree v-else-if="idTopic === 3" />
     </el-form>
 </div>
+
+
+<!-- No data -->
+<el-empty v-else :image-size="200"  :description="'Không có dữ liệu'"/>
 </template>
 
 <style lang="scss" scoped>
