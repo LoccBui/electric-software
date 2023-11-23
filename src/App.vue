@@ -11,6 +11,29 @@ import { RouterLink, RouterView } from 'vue-router'
 </template>
 
 <style lang="scss" scoped>
+/* Scroll bar css*/
+::-webkit-scrollbar {
+   width: 8px;
+ }
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1565C0;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.section::-webkit-scrollbar-thumb {
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+
 .box {
  $seft: &;
  
@@ -25,9 +48,9 @@ import { RouterLink, RouterView } from 'vue-router'
     
     &__cover {
        min-width: 50%;
-       min-height: 50%;
+       height: auto;
        max-height: 90%;
-       overflow-y: scroll;
+       overflow-y: auto;
        position: fixed;
        top: 50%;
        left: 50%;

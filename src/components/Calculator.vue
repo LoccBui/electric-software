@@ -24,7 +24,7 @@ const reverseList = ref(
 //Funtions
 const chooseReverseItem = (item: Object) => {
   guiStore.titleTopic = item.name
-  guiStore.typeTopic = `SC`
+  guiStore.typeTopic = `TC`
   guiStore.numberTopic = item.id
 
   router.push(`/reverse/${item.id}`)

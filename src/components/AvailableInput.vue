@@ -26,6 +26,15 @@ const ruleForm = ref(
       <el-descriptions-item label="Giá trị At (A*B):">
         <el-tag effect="dark" size="medium"> {{ Number(counterStore.inputA) * Number(counterStore.inputB) }}</el-tag>
       </el-descriptions-item>
+      
+      <el-descriptions-item v-if="counterStore.dataInput.aFe" label="Diện tích a của Fe (Cm):">
+        <el-tag effect="dark" size="medium"> {{ counterStore.dataInput.aFe }}</el-tag>
+      </el-descriptions-item>
+      
+      <el-descriptions-item v-if="counterStore.dataInput.bFe" label="Diện tích b của Fe (Cm):">
+        <el-tag effect="dark" size="medium"> {{ counterStore.dataInput.bFe }}</el-tag>
+      </el-descriptions-item>
+      
     </el-descriptions>
     
     <el-divider style="margin: 10px 0;" />

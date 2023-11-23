@@ -19,7 +19,7 @@ defineProps<{
                 <el-descriptions-item  label="d1"> 1.128* căn bậc 2(I1/J)</el-descriptions-item>
               </div>
               
-              <div v-if="type === 'thuCap'">
+              <div v-else-if="type === 'thuCap'">
                 <el-descriptions-item  label="U2-1"> Giá trị nhập vào (U2-1) phía sơ cấp</el-descriptions-item>
                 <el-descriptions-item  label="U2-2"> Giá trị nhập vào (U2-1) phía sơ cấp </el-descriptions-item>
                 <el-descriptions-item  label="U2-3"> Giá trị nhập vào (U2-1) phía sơ cấp </el-descriptions-item>

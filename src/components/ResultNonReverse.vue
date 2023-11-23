@@ -99,9 +99,7 @@ const handleClick = (tab) => {
   
   <InformationCalculation :type="activeTab" />
   
-  <el-button style="width: 100%;" type="primary" @click="guiStore.navigateTo('/')">Quay về trang chủ</el-button>
-  
-
+  <el-button style="width: 100%;" size="large" type="primary" @click="guiStore.navigateTo('/')">Quay về trang chủ</el-button>
 </div>
 
 <!-- No data -->

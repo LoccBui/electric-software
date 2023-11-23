@@ -3,7 +3,7 @@ import { RouterLink, RouterView } from 'vue-router'
 import { computed, onMounted, ref } from 'vue'
 
 import AvailableInput from '@/components/AvailableInput.vue'
-import NonReverseInputOne from '@/views/NonReverseInputOne.vue'
+import ReverseInputOne from '@/views/ReverseInputOne.vue'
 import NonReverseInputTwo from '@/views/NonReverseInputTwo.vue'
 import NonReverseInputThree from '@/views/NonReverseInputThree.vue'
 
@@ -26,7 +26,7 @@ const counterStore = useCounterStore()
         <span> Bài toán ngược | {{ guiStore.titleTopic }} </span>
       </template>
     </el-page-header>
-
+    
     <el-form
         ref="ruleFormRef"
         :model="ruleForm"
@@ -34,7 +34,7 @@ const counterStore = useCounterStore()
         label-position="top"
       > 
         <AvailableInput />
-        <NonReverseInputOne v-if="idTopic === 1" />
+        <ReverseInputOne v-if="idTopic === 1" />
         <NonReverseInputTwo v-else-if="idTopic === 2" />
         <NonReverseInputThree v-else-if="idTopic === 3" />
     </el-form>

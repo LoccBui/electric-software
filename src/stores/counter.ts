@@ -42,6 +42,10 @@ export const useCounterStore = defineStore({
       U2_1: '',
       U2_2: '',
       U2_3: '',
+      
+      // thu cap
+      aFe: '',
+      bFe: '',
     },
   }) as CounterRootState,
   
@@ -58,7 +62,7 @@ export const useCounterStore = defineStore({
       const s2 = Number(this.dataInput.S2)
       const n = Number(this.dataInput.n)
       const U1 = Number(this.dataInput.U1)
-      const res = s2 / n * U1
+      const res = s2 / ( n * U1)
 
       return res
     },
@@ -85,6 +89,12 @@ export const useCounterStore = defineStore({
     //thu cap
     handleI2() {
       // I2= (S2/U2) (A)
+      // S2 = U2*I2
+      const S2 = 
+      
+      console.log('this.dataInput.S2', this.dataInput.S2);
+      console.log('this.dataInput.U2', this.dataInput.U2);
+      
       const res = (this.dataInput.S2 / this.dataInput.U2)
       return res
     },
@@ -112,6 +122,15 @@ export const useCounterStore = defineStore({
       const U1 = Number(this.dataInput.U1)
       const I1 = this.handleCalcI1()
       const res = U1 * I1
+      
+      return res
+    },
+    
+    handleS2Reverse() {
+      // S2 = U2*I2
+      const I2 = this.handleI2()
+      console.log(I2);
+      const res = this.dataInput.U2 * I2
       
       return res
     },
@@ -163,6 +182,40 @@ export const useCounterStore = defineStore({
       
       return res
     },
+    
+    
+    handleCalcI1Reverse() {
+     // I1= (S2/η*U1) (A)
+      const S2 = this.handleS2ReverseType1()
+      console.log('handleCalcI1Reverse');
+      console.log('handleCalcI1Reverse', S2);
+      
+      
+      const n = Number(this.dataInput.n)
+      const U1 = Number(this.dataInput.U1)
+      const I1 = S2 / (n * U1)
+
+      return I1
+    },
+    
+    
+    handleS2ReverseType1() {
+      // S2 = U2*I2 Mà U2 = (U2-1)+(U2-2)
+      const U2 = this.dataInput.U2_1 + this.dataInput.U2_2
+      const I2 = this.handleI2TypeTwo()
+      const S2 = U2 * I2
+      
+      return S2
+    },
+    
+    
+    handleD1ReverseType1() {
+      // d1 = 1.128* căn bậc 2(I1/J)
+      // const I2 = this.handleI2()
+      // const data = (I2 / this.dataInput.J)
+      // const d1 = 1.128 * Math.sqrt(data)
+      return 123
+    }
   }
 })
 
