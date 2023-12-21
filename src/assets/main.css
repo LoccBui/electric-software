@@ -16,9 +16,17 @@
   --sm-radius-border: 5px;
 }
 
+
+/* Common Components */
+.el-divider {
+  margin: 12px 0 !important;
+}
+
+/* Seft defined */
 .mb-sm {
   margin-bottom: 16px;
 }
+
 
 
 

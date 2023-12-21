@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import router from '@/router'
 import { ref } from 'vue'
-
 import { useGuiStore } from '@/stores/gui'
+
 const guiStore = useGuiStore()
+const tabPosition = ref('top')
 
 const noneReverseList = ref(
   [
@@ -44,38 +45,41 @@ const chooseNonReverseItem = (item: Object) => {
   
   <el-page-header title="Quay lại" class="mb-sm" @back="guiStore.navigateTo('/')">
     <template #content>
-      <span> Chọn dạng bài </span>
+      <span style="margin-left: 8px;"> Chọn dạng bài </span>
     </template>
   </el-page-header>
   
-  <!-- Bài toán thuận -->
-  <el-divider content-position="left">Dạng bài toán thuận</el-divider>
-  
-  <div class="box__options__cover">
-      <div 
+  <el-tabs :tab-position="tabPosition" style="height: 200px" class="demo-tabs">
+    
+    <!-- Bài toán thuận -->
+    <el-tab-pane label="Dạng bài toán thuận">
+      <div class="box__options__cover">
+        <div 
           @click="chooseNonReverseItem(item)"
           class="box__options__item" 
           v-for="(item, index) in noneReverseList" 
           :key="index"
-      >
+        >
           <el-button type="primary"> {{ item.name }} </el-button>                
-      </div> 
-  </div>
-  
-  
-  <!-- Bài toán ngược -->
-  <el-divider content-position="left">Dạng bài toán ngược</el-divider>
-  
-  <div class="box__options__cover">
-      <div 
+        </div> 
+      </div>
+    </el-tab-pane>
+    
+    
+    <!-- Bài toán ngược -->
+    <el-tab-pane label="Dạng bài toán ngược">
+      <div class="box__options__cover">
+        <div 
           class="box__options__item" 
           v-for="(item, index) in reverseList" 
           :key="index" 
           @click="chooseReverseItem(item)"
-      >
+        >
           <el-button type="primary"> {{ item.name }}</el-button>                
-      </div> 
-  </div>
+        </div> 
+      </div>
+    </el-tab-pane>
+  </el-tabs>
 </div>
 </template>
 
