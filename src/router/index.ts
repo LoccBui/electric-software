@@ -57,6 +57,9 @@ const router = createRouter({
           path: '',
           component: Calculator
         },
+        { path: '/inputing', component: Home},
+        { path: '/non-reverse/:id', component: NonReverseMath},
+        { path: '/reverse/:id', component: ReverseMath},
       ]
     },
     
@@ -64,8 +67,7 @@ const router = createRouter({
     
     // { path: '/test', name: 'LandingLayout', component: LandingLayout },
     // { path: '/optional', name: 'optional', component: Calculator },
-    { path: '/non-reverse/:id', name: 'non-reverse', component: NonReverseMath, beforeEnter: [requireValue] },
-    { path: '/reverse/:id', name: 'reverse', component: ReverseMath, beforeEnter: [requireValue] },
+  
     { path: '/result-non-reverse', name: 'result-non-reverse', component: ResultNonReverse, beforeEnter: [requireValue] },
     { path: '/result-reverse', name: 'result-reverse', component: ResultReverse, beforeEnter: [requireValue] },
     { path: '/:pathMatch(.*)*',  component: PageNotFound, beforeEnter: [pageError]},  // Navigate 404 if not found any path

@@ -1,43 +1,77 @@
 <script setup lang="ts">
-import router from '@/router'
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useGuiStore } from '@/stores/gui'
 
 const guiStore = useGuiStore()
-const tabPosition = ref('top')
+const contentSelection:any = ref(null)
+const mathTypeName:any = ref(null)
 
 const noneReverseList = ref(
   [
-    {id: 1, name: 'Dạng đầu ra 1 cấp điện áp'},
-    {id: 2, name: 'Dạng đầu ra 2 cấp điện áp'},
-    {id: 3, name: 'Dạng đầu ra 3 cấp điện áp'},
+    {id: 1, type: 'non-reverse',name: 'Dạng đầu ra 1 cấp điện áp'},
+    {id: 2, type: 'non-reverse',name: 'Dạng đầu ra 2 cấp điện áp'},
+    {id: 3, type: 'non-reverse',name: 'Dạng đầu ra 3 cấp điện áp'},
   ]
 )
 
 const reverseList = ref(
   [
-    {id: 1, name: 'Dạng đầu ra 1 cấp điện áp'},
-    {id: 2, name: 'Dạng đầu ra 2 cấp điện áp'},
-    {id: 3, name: 'Dạng đầu ra 3 cấp điện áp'},
+    {id: 1, type: 'reverse',name: 'Dạng đầu ra 1 cấp điện áp'},
+    {id: 2, type: 'reverse',name: 'Dạng đầu ra 2 cấp điện áp'},
+    {id: 3, type: 'reverse',name: 'Dạng đầu ra 3 cấp điện áp'},
   ]
 )
 
 //Funtions
+const chooseItem = (item: {type: string}) => {
+  item.type === 'reverse' ? chooseReverseItem(item) : chooseNonReverseItem(item)
+}
+
 const chooseReverseItem = (item: Object) => {
   guiStore.titleTopic = item.name
   guiStore.typeTopic = `TC`
   guiStore.numberTopic = item.id
-
-  router.push(`/reverse/${item.id}`)
+  guiStore.mathPath = 'reverse'
+  
+  guiStore.navigateTo('/inputing')
 }
 
 const chooseNonReverseItem = (item: Object) => {
   guiStore.titleTopic = item.name
   guiStore.typeTopic = `SC` + item.id
   guiStore.numberTopic = item.id
+  guiStore.mathPath = 'non-reverse'
   
-  router.push(`/non-reverse/${item.id}`)
+  guiStore.navigateTo('/inputing')
 }
+
+
+const handleCommand = (command: string) => {
+  if (command === 'nonReverse') {
+    contentSelection.value = noneReverseList.value
+    mathTypeName.value = 'Dạng bài toán thuận'
+    guiStore.showMessage('Bạn đã chọn dạng bài toán thuận', 'success')
+  }
+  else {
+    contentSelection.value = reverseList.value
+    mathTypeName.value = 'Dạng bài toán ngược'
+    guiStore.showMessage('Bạn đã chọn dạng bài toán ngược', 'success')
+  }
+}
+
+const handleDataSelection = () => {
+  if (guiStore.mathPath === 'reverse') {
+    contentSelection.value = reverseList.value
+    mathTypeName.value = 'Dạng bài toán ngược'
+  } else if (guiStore.mathPath === 'non-reverse') {
+    contentSelection.value = noneReverseList.value
+    mathTypeName.value = 'Dạng bài toán thuận'
+  }
+}
+
+onMounted(() => {
+  handleDataSelection()
+})
 </script>
 
 <template>
@@ -49,37 +83,40 @@ const chooseNonReverseItem = (item: Object) => {
     </template>
   </el-page-header>
   
-  <el-tabs :tab-position="tabPosition" style="height: 200px" class="demo-tabs">
-    
-    <!-- Bài toán thuận -->
-    <el-tab-pane label="Dạng bài toán thuận">
-      <div class="box__options__cover">
-        <div 
-          @click="chooseNonReverseItem(item)"
-          class="box__options__item" 
-          v-for="(item, index) in noneReverseList" 
-          :key="index"
-        >
-          <el-button type="primary"> {{ item.name }} </el-button>                
-        </div> 
-      </div>
-    </el-tab-pane>
-    
-    
-    <!-- Bài toán ngược -->
-    <el-tab-pane label="Dạng bài toán ngược">
-      <div class="box__options__cover">
-        <div 
-          class="box__options__item" 
-          v-for="(item, index) in reverseList" 
-          :key="index" 
-          @click="chooseReverseItem(item)"
-        >
-          <el-button type="primary"> {{ item.name }}</el-button>                
-        </div> 
-      </div>
-    </el-tab-pane>
-  </el-tabs>
+  
+  <el-descriptions>
+    <el-descriptions-item>
+      <span>Bạn đang chọn: </span>
+      <el-tag size="large">{{ mathTypeName || 'Vui lòng chọn dạng toán' }}</el-tag>
+    </el-descriptions-item>
+  </el-descriptions>
+  
+  <el-dropdown @command="handleCommand">
+    <el-button type="primary">
+      Dạng bài toán
+      <img style="width: 10px; margin-left: 5px;" src="../assets/icons/icons_dropdown.png" alt="Dropdown Icon">
+    </el-button>
+    <template #dropdown>
+      <el-dropdown-menu>
+        <el-dropdown-item command="nonReverse">Dạng bài toán thuận</el-dropdown-item>
+        <el-dropdown-item command="reverse">Dạng bài toán ngược</el-dropdown-item>
+      </el-dropdown-menu>
+    </template>
+  </el-dropdown>
+  
+  <el-card v-if="contentSelection" style="margin-top: 10px;">
+    <div v-for="(item, index) in contentSelection" :key="index">
+      <el-button 
+        @click="chooseItem(item)"
+        style="margin-top: 10px; 
+        width: 100%;" 
+        type="primary"> 
+        {{ item.name }} 
+      </el-button>         
+    </div>
+  </el-card>
+  
+  <el-empty v-else :image-size="200" description="Không có dữ liệu. Vui lòng chọn dạng bài toán để tiếp tục" />
 </div>
 </template>
 

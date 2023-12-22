@@ -1,9 +1,10 @@
 <script setup lang="ts">
+import router from '@/router'
 import { computed, onMounted, ref } from 'vue'
 import { useCounterStore } from '@/stores/counter'
-import router from '@/router'
+import { useGuiStore } from '@/stores/gui'
 
-
+const guiStore = useGuiStore()
 const ruleFormRef = ref(null)
 const isChooseOptions = ref(false)
 const counterStore = useCounterStore()
@@ -32,7 +33,7 @@ const confirm = async () => {
         if (valid) {
             counterStore.inputA = ruleForm.value.inputA
             counterStore.inputB = ruleForm.value.inputB
-            router.push('/optional')
+            router.push(`${guiStore.mathPath}/${guiStore.numberTopic}`)
         } else {
             return false
         }
@@ -47,6 +48,14 @@ onMounted(() => {
 
 <template>
 <div class="dashboard__container">
+
+    <el-page-header title="Quay lại" class="mb-sm" @back="guiStore.navigateTo('/optional')">
+        <template #content>
+          <span style="margin-left: 8px;"> Chọn dạng bài </span>
+        </template>
+    </el-page-header>
+        
+
     <el-form
         ref="ruleFormRef"
         :model="ruleForm"
@@ -62,7 +71,8 @@ onMounted(() => {
                 placeholder="Giá trị A (Cm)"
                 autofocus 
                 v-model="ruleForm.inputA" 
-                clearable  
+                clearable
+                @change="confirm()"
             />  
         </el-form-item>
         
@@ -73,6 +83,7 @@ onMounted(() => {
                 v-model="ruleForm.inputB" 
                 clearable   
                 @keyup.enter="confirm()"
+                @change="confirm()"
             />  
         </el-form-item>
         

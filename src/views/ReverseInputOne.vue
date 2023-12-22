@@ -195,7 +195,7 @@ const confirm = async () => {
 
 
 <!-- No data -->
-<el-empty v-else :image-size="200"  :description="'Không có dữ liệu'"/>
+<!-- <el-empty v-else :image-size="200"  :description="'Không có dữ liệu'"/> -->
 </template>
 
 <style lang="scss" scoped>

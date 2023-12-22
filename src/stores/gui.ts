@@ -1,11 +1,12 @@
-import { ref, computed } from 'vue'
 import { acceptHMRUpdate, defineStore } from 'pinia'
 import router from '@/router'
+import { ElMessage } from 'element-plus'
 
 export type GuiRootState = {
   titleTopic: string,
   typeTopic: string,
-  numberTopic: number
+  numberTopic: number,
+  mathPath: string,
 }
 
 export const useGuiStore = defineStore({
@@ -26,16 +27,28 @@ export const useGuiStore = defineStore({
       paths: ['numberTopic'],
       storage: sessionStorage,
     },
+    {
+      key: 'mathPath',
+      paths: ['mathPath'],
+      storage: sessionStorage,
+    }
   ],
   state: () =>
   ({
     titleTopic: '',
     typeTopic: '',
-    numberTopic: 0
+    mathPath: '',
+    numberTopic: 0,
   }) as GuiRootState,
   actions: {
     navigateTo(path: string) {
       router.push(path)
+    },
+    showMessage: (message: string, type?: string) => {
+      ElMessage({
+        message: message,
+        type: type || 'success',
+      })
     }
   }
 })
