@@ -1,9 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { ElNotification } from 'element-plus'
 
-
+// Stores
 import { useCounterStore } from '@/stores/counter'
-
+import { useGuiStore } from '@/stores/gui'
 
 // Lazy load components
 const Home = () => import('../components/Home.vue')
@@ -35,6 +35,20 @@ const requireValue = (to, from, next) => {
   }
 }
 
+const requireTitle = (to, from, next) => {
+  const guiStore = useGuiStore()
+
+  if (!guiStore.titleTopic) {
+    router.push('/')
+    ElNotification({
+      title: 'Thiếu dữ liệu',
+      message: 'Chuyển về trang chủ',
+      type: `error`,
+    })
+  } else {
+    next()
+  }
+}
 
 const pageError = (to, from, next) => {
   router.push('/')
@@ -45,6 +59,7 @@ const pageError = (to, from, next) => {
   })
 }
 
+// Route Configuration
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -58,18 +73,12 @@ const router = createRouter({
           component: Calculator
         },
         { path: '/inputing', component: Home},
-        { path: '/non-reverse/:id', component: NonReverseMath},
-        { path: '/reverse/:id', component: ReverseMath},
+        { path: '/non-reverse/:id', component: NonReverseMath, beforeEnter: [requireTitle]},
+        { path: '/reverse/:id', component: ReverseMath, beforeEnter: [requireTitle]},
+        { path: '/result-non-reverse', component: ResultNonReverse },
+        { path: '/result-reverse', component: ResultReverse },
       ]
     },
-    
-    
-    
-    // { path: '/test', name: 'LandingLayout', component: LandingLayout },
-    // { path: '/optional', name: 'optional', component: Calculator },
-  
-    { path: '/result-non-reverse', name: 'result-non-reverse', component: ResultNonReverse, beforeEnter: [requireValue] },
-    { path: '/result-reverse', name: 'result-reverse', component: ResultReverse, beforeEnter: [requireValue] },
     { path: '/:pathMatch(.*)*',  component: PageNotFound, beforeEnter: [pageError]},  // Navigate 404 if not found any path
   ]
 })

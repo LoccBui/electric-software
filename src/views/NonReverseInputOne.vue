@@ -1,20 +1,13 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
-import { computed, onMounted, ref } from 'vue'
+import { ref } from 'vue'
 
-import { useGuiStore } from '@/stores/gui'
-import AvailableInput from '@/components/AvailableInput.vue'
 import router from '@/router'
+
 import { useCounterStore } from '@/stores/counter'
 
-
-const guiStore = useGuiStore()
 const counterStore = useCounterStore()
-
-
-const idTopic = Number(router.currentRoute.value.params.id)
 const ruleFormRef = ref(null)
-
+const isStepOne  = ref(true)
 const materialList = ref(
   [
     {
@@ -51,11 +44,24 @@ const JList = ref(
   ]
 )
 
+
+const aList = ref(
+  [
+    {id: 1, value: 1.5 },
+    {id: 2, value: 1.8 },
+    {id: 3, value: 2.2 },
+    {id: 4, value: 2.8 },
+    {id: 5, value: 3.5 },
+    {id: 6, value: 3.9 },
+  ]
+)
+
 const ruleForm = ref(
   {
     inputU1: counterStore.dataInput.U1  || '',
     inputU2: counterStore.dataInput.U2 || '',
-    inputS2: counterStore.dataInput.S2 || '',
+    inputA: counterStore.inputA || '',
+    inputI2: counterStore.dataInput.I2 || '',
     material: '',
     selectedJ: ''
   }
@@ -67,27 +73,37 @@ const rules = ref(
   {
     inputU1: [{ required: true, message: 'Bạn cần nhập giá trị U1', trigger: 'change'}],
     inputU2: [{ required: true, message: 'Bạn cần nhập giá trị U2', trigger: 'change'}],
-    inputS2: [{ required: true, message: 'Bạn cần nhập giá trị S2', trigger: 'change'}],
+    inputI2: [{ required: true, message: 'Bạn cần nhập giá trị I2', trigger: 'change'}],
+    inputA: [{ required: true, message: 'Bạn cần nhập giá trị a', trigger: 'change'}],
+    
     material: [{ required: true, message: 'Bạn cần chọn giá trị', trigger: 'change'}],
     selectedJ: [{ required: true, message: 'Bạn cần chọn giá trị', trigger: 'change'}],
   }      
 )
 
 
+const calcAtData = () => {
+  // 1.423 * Căn bậc 2 của S2 
+  const S2 = Number(counterStore.dataInput.U2) * Number(counterStore.dataInput.I2)
+  const res = 1.423 * Math.sqrt(S2)
+  if (res > 0)
+    return counterStore.formatNumber(res)
+}
+
 // Funtions
 const assignValueToStore = () => {
   counterStore.dataInput.U1 = ruleForm.value.inputU1
   counterStore.dataInput.U2 = ruleForm.value.inputU2
-  counterStore.dataInput.S2 = ruleForm.value.inputS2
+  counterStore.dataInput.I2 = ruleForm.value.inputI2
   counterStore.dataInput.k = ruleForm.value.material.valueK
   counterStore.dataInput.n = ruleForm.value.material.valueN
   counterStore.dataInput.J = ruleForm.value.selectedJ
+  
+  counterStore.inputA = ruleForm.value.inputA
+  counterStore.inputB = (1 - 1.5) * Number(counterStore.inputA)
+  counterStore.inputAt = calcAtData()
 }
 
-// Determine to show input
-const allowedShowU1 = [1, 2, 3]
-const allowedShowU2 = [1]
-const allowedShowS2 = [1, 2, 3]
 
 const confirm = async () => {
   await  ruleFormRef.value.validate((valid) => {
@@ -99,95 +115,122 @@ const confirm = async () => {
     }
   })
 }
+
+const handleStepOne = async () => {
+  await ruleFormRef.value.validate((valid) => {
+    if (valid) {
+      isStepOne.value = false
+    } else {
+      isStepOne.value = true
+    }
+  })
+}
 </script>
 
 <template>
-<div v-if="counterStore.inputA && counterStore.inputB">
-
+<div>
     <el-form
         ref="ruleFormRef"
         :model="ruleForm"
         :rules="rules"
         label-position="top"
     > 
-        <el-form-item prop="inputU1" label="Điện áp vào U1(Vol)"> 
-            <el-input
-              type="number"
-              placeholder="Giá trị U1 (Cm)"
-              autofocus 
-              v-model="ruleForm.inputU1" 
-              clearable  
-            />  
-        </el-form-item>
-        
-        <el-form-item prop="inputU2" label="Điện áp ra U2(Vol)"> 
-            <el-input
-              type="number"
-              placeholder="Giá trị U2 (Cm)"
-              v-model="ruleForm.inputU2" 
-              clearable   
-            />  
-        </el-form-item>
-        
-        
-        <el-form-item prop="inputS2" label="Công suất MBA (S2) (VA)"> 
-            <el-input
+        <div v-if="isStepOne">
+          <el-form-item prop="inputU1" label="Điện áp vào U1(Vol)"> 
+              <el-input
                 type="number"
-                placeholder="Giá trị S2 (Cm)"
-                v-model="ruleForm.inputS2" 
+                placeholder="Giá trị U1 (Cm)"
+                autofocus 
+                v-model="ruleForm.inputU1" 
+                clearable  
+              />  
+          </el-form-item>
+          
+          <el-form-item prop="inputU2" label="Điện áp ra U2(Vol)"> 
+              <el-input
+                type="number"
+                placeholder="Giá trị U2 (Cm)"
+                v-model="ruleForm.inputU2"
+                @input="assignValueToStore()"
                 clearable   
-                @keyup.enter="confirm()"
-            />  
-        </el-form-item>
+              />  
+          </el-form-item>
+          
+          <el-form-item prop="inputI2" label="Dòng điện I2(A)"> 
+              <el-input
+                type="number"
+                placeholder="Giá trị I2 (Cm)"
+                @input="assignValueToStore()"
+                v-model="ruleForm.inputI2" 
+                clearable   
+              />  
+          </el-form-item>
+          
+          <el-button 
+            class="content__action"
+            type="primary" 
+            size="large"
+            @click="handleStepOne()"> Tiếp theo
+          </el-button>
+        </div>
         
-        
-        <el-form-item prop="material" label="Chọn vật liệu tấm lõi">
-          <el-select 
-              v-model="ruleForm.material" 
+        <div v-else>
+          <el-form-item prop="material" label="Chọn lá thép">
+            <el-select 
+                v-model="ruleForm.material" 
+                class="content__action"
+                placeholder="Chọn lá thép" 
+                size="large"
+                @change="assignValueToStore()"
+                >
+              <el-option
+                v-for="item in materialList"
+                :key="item.value"
+                :label="item.title"
+                :value="item.value"
+              />
+            </el-select>
+          </el-form-item>
+          
+          
+          <el-form-item prop="selectedJ" label="Chọn hệ số mật độ">
+            <el-select 
+              v-model="ruleForm.selectedJ" 
               class="content__action"
-              placeholder="Chọn vật liệu tấm lõi" 
+              placeholder="Hệ số mật độ J(A/mm)" 
               size="large"
               @change="assignValueToStore()"
               >
             <el-option
-              v-for="item in materialList"
+              v-for="item in JList"
               :key="item.value"
               :label="item.title"
-              :value="item.value"
+              :value="item.valueJ"
             />
-          </el-select>
-        </el-form-item>
+            </el-select>
+          </el-form-item>
+          
+          <el-form-item prop="inputA" label="Chọn giá trị a:"> 
+            <el-select v-model="ruleForm.inputA" @change="assignValueToStore()" style="width: 100%;" placeholder="Chọn giá trị a" size="large">
+              <el-option
+                v-for="item in aList"
+                :key="item.value"
+                :label="item.value"
+                :value="item.value"
+              />
+            </el-select>
+          </el-form-item>
         
-        
-        <el-form-item prop="selectedJ" label="Chọn hệ số mật độ">
-          <el-select 
-            v-model="ruleForm.selectedJ" 
-            class="content__action"
-            placeholder="Hệ số mật độ J(A/mm)" 
-            size="large"
-            @change="assignValueToStore()"
-            >
-          <el-option
-            v-for="item in JList"
-            :key="item.value"
-            :label="item.title"
-            :value="item.valueJ"
-          />
-          </el-select>
-        </el-form-item>
-        
-        <el-button 
-            class="content__action"
-            type="primary" 
-            size="large"
-            @click="confirm()"> Tính toán
-        </el-button>
+          
+          <el-button 
+              class="content__action"
+              type="primary" 
+              size="large"
+              @click="confirm()"> Tính toán
+          </el-button>
+        </div>
     </el-form>
 </div>
-
-
-<!-- No data -->
-<!-- <el-empty v-else :image-size="200"  :description="'Không có dữ liệu'"/> -->
 </template>
 
 <style lang="scss" scoped>

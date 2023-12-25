@@ -17,15 +17,15 @@ const guiStore = useGuiStore()
     <h2> Giới thiệu </h2>
   
     <p>
-      Phần mềm Trans_Cal, được phát triển bởi nhóm tác giả gồm TS. Lê Phương Trường và Ths. Thiên Khương Tùng, là một ứng dụng tính toán chuyên sâu nhằm hỗ trợ sinh viên các trường đại học, cao đẳng và trung cấp trong quá trình thiết kế và tính toán máy biến áp cách lý 1 pha.
+      Phần mềm <span class="hightlight">Trans_Cal</span>, được phát triển bởi nhóm tác giả gồm TS. Lê Phương Trường và Ths. Thiên Khương Tùng, là một ứng dụng tính toán chuyên sâu nhằm hỗ trợ sinh viên các trường đại học, cao đẳng và trung cấp trong quá trình thiết kế và tính toán máy biến áp cách lý 1 pha.
     </p>
     
     <p>
-      Với mục tiêu chính là cung cấp giải pháp nhanh chóng và chính xác cho quá trình tính toán phức tạp của máy biến áp, Trans_Cal được tạo ra để giảm bớt gánh nặng tính toán cho người sử dụng. Đặc biệt, ứng dụng này nhằm hỗ trợ sinh viên trong các ngành học liên quan đến điện công nghiệp và điện dân dụng, bao gồm đào tạo Cao đẳng, Trung cấp, và các chương trình học Vừa làm vừa học.
+      Với mục tiêu chính là cung cấp giải pháp nhanh chóng và chính xác cho quá trình tính toán phức tạp của máy biến áp, <span class="hightlight">Trans_Cal</span> được tạo ra để giảm bớt gánh nặng tính toán cho người sử dụng. Đặc biệt, ứng dụng này nhằm hỗ trợ sinh viên trong các ngành học liên quan đến điện công nghiệp và điện dân dụng, bao gồm đào tạo Cao đẳng, Trung cấp, và các chương trình học Vừa làm vừa học.
     </p>
     
     <p>
-      Với giao diện thân thiện và dễ sử dụng, Trans_Cal cho phép người dùng một cách thuận lợi nhập thông số cần thiết và tự động thực hiện các bước tính toán phức tạp, giúp họ tiết kiệm thời gian và nỗ lực trong việc nghiên cứu và thiết kế máy biến áp cách lý 1 pha. Điều này không chỉ nâng cao hiệu suất làm việc mà còn tạo điều kiện thuận lợi cho sự phát triển chuyên sâu trong lĩnh vực công nghiệp và khoa học kỹ thuật.
+      Với giao diện thân thiện và dễ sử dụng, <span class="hightlight">Trans_Cal</span> cho phép người dùng một cách thuận lợi nhập thông số cần thiết và tự động thực hiện các bước tính toán phức tạp, giúp họ tiết kiệm thời gian và nỗ lực trong việc nghiên cứu và thiết kế máy biến áp cách lý 1 pha. Điều này không chỉ nâng cao hiệu suất làm việc mà còn tạo điều kiện thuận lợi cho sự phát triển chuyên sâu trong lĩnh vực công nghiệp và khoa học kỹ thuật.
     </p>
     
     <el-divider />
@@ -91,6 +91,12 @@ a {
 
 .section::-webkit-scrollbar-thumb {
   box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+
+
+.hightlight {
+  color: var(--primary-color);
+  font-weight: bolder;
 }
 
 .box {

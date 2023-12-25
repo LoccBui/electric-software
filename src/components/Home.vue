@@ -87,7 +87,7 @@ onMounted(() => {
             />  
         </el-form-item>
         
-        <el-form-item label="Giá trị At = A * B (Cm2)"> 
+        <el-form-item label="Giá trị At =  1.423 * Căn bậc 2 của S2 (Cm2)"> 
             <el-input
                 v-model="inputAt" 
                 disabled   

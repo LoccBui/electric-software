@@ -27,22 +27,25 @@ const chooseItem = (item: {type: string}) => {
   item.type === 'reverse' ? chooseReverseItem(item) : chooseNonReverseItem(item)
 }
 
-const chooseReverseItem = (item: Object) => {
+const chooseReverseItem = (item: {name: string, id: number}) => {
+  console.log(item.name);
   guiStore.titleTopic = item.name
   guiStore.typeTopic = `TC`
   guiStore.numberTopic = item.id
   guiStore.mathPath = 'reverse'
   
-  guiStore.navigateTo('/inputing')
+  // guiStore.navigateTo('/inputing')
+  guiStore.navigateTo(`${guiStore.mathPath}/${item.id}`)
 }
 
-const chooseNonReverseItem = (item: Object) => {
+const chooseNonReverseItem = (item: {name: string, id: number}) => {
   guiStore.titleTopic = item.name
   guiStore.typeTopic = `SC` + item.id
   guiStore.numberTopic = item.id
   guiStore.mathPath = 'non-reverse'
   
-  guiStore.navigateTo('/inputing')
+  // guiStore.navigateTo('/inputing')
+  guiStore.navigateTo(`${guiStore.mathPath}/${item.id}`)
 }
 
 

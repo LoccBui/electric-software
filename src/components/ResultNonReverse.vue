@@ -1,19 +1,13 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
 import { useCounterStore } from '@/stores/counter'
-import { computed, onMounted, ref } from 'vue'
+import { ref } from 'vue'
 
 import InformationCalculation from '@/views/InformationCalculation.vue'
-
-
 import { useGuiStore } from '@/stores/gui'
+
 const guiStore = useGuiStore()
-
 const counterStore = useCounterStore()
-import router from '@/router'
-
 const tabPosition = ref('top')
-
 const activeTab = ref('soCap')
 
 const handleClick = (tab) => {
@@ -28,13 +22,8 @@ const handleClick = (tab) => {
 </script>
 
 <template>
-<div v-if="counterStore.inputA && counterStore.inputB" class="content__container">
-  <el-page-header title="Quay lại" class="mb-sm" @back="router.back()">
-    <template #content>
-      <span> Kết quả đầu ra </span>
-    </template>    
-  </el-page-header>
-  
+<div class="content__container">
+  <span> Kết quả đầu ra </span>
   
   <el-tabs v-model="activeTab" :tab-position="tabPosition" class="demo-tabs" @tab-click="handleClick">
     <el-tab-pane name="soCap" label="Phía sơ cấp">
@@ -42,10 +31,29 @@ const handleClick = (tab) => {
           :column="1"
           border
         >
-          <el-descriptions-item  label="Điện áp vào U1"> {{ counterStore.dataInput.U1 }}</el-descriptions-item>
-          <el-descriptions-item  label="Dòng điện ra I1"> {{ counterStore.handleCalcI1() }} </el-descriptions-item>
-          <el-descriptions-item  label="Số vòng dây N1"> {{ counterStore.handleN1() }}</el-descriptions-item>
-          <el-descriptions-item  label="Đường kính dây d1">{{ counterStore.handleD1() }}</el-descriptions-item>
+          <div v-if="guiStore.mathPath === 'non-reverse'">
+            <div v-if="guiStore.numberTopic === 1">
+              <el-descriptions-item  label="Điện áp vào U1 (Vol)"> {{ counterStore.dataInput.U1 }}</el-descriptions-item>
+              <el-descriptions-item  label="Dòng điện ra I1 (A)"> {{ counterStore.handleCalcI1() }} </el-descriptions-item>
+              <el-descriptions-item  label="Số vòng dây N1 (Vg)"> {{ counterStore.handleN1() }}</el-descriptions-item>
+              <el-descriptions-item  label="Đường kính dây d1 (mm)">{{ counterStore.handleD1() }}</el-descriptions-item>
+            </div>
+            
+            <div v-if="guiStore.numberTopic === 2">
+              <el-descriptions-item  label="Điện áp vào U1 (Vol)"> {{ counterStore.dataInput.U1 }}</el-descriptions-item>
+              <el-descriptions-item  label="Dòng điện ra I1 (A)"> {{ counterStore.handleNonI1Topic2() }} </el-descriptions-item>
+              <el-descriptions-item  label="Số vòng dây N1 (Vg)"> {{ counterStore.handleN1() }}</el-descriptions-item>
+              <el-descriptions-item  label="Đường kính dây d1 (mm)">{{ counterStore.handleD1() }}</el-descriptions-item>
+            </div>
+            
+            <div v-if="guiStore.numberTopic === 3">
+              <el-descriptions-item  label="Điện áp vào U1 (Vol)"> {{ counterStore.dataInput.U1 }}</el-descriptions-item>
+              <el-descriptions-item  label="Dòng điện ra I1 (A)"> {{ counterStore.handleNonI1Topic3() }} </el-descriptions-item>
+              <el-descriptions-item  label="Số vòng dây N1 (Vg)"> {{ counterStore.handleN1() }}</el-descriptions-item>
+              <el-descriptions-item  label="Đường kính dây d1 (mm)">{{ counterStore.handleNonD1Topic3() }}</el-descriptions-item>
+            </div>
+          </div>
+       
         </el-descriptions>
     </el-tab-pane>
     
@@ -55,20 +63,22 @@ const handleClick = (tab) => {
           border
         >
           <div v-if="guiStore.numberTopic === 1">
-            <el-descriptions-item  label="Điện áp vào U2"> {{ counterStore.dataInput.U2 }}</el-descriptions-item>
-            <el-descriptions-item  label="Dòng điện ra I2"> {{ counterStore.handleI2() }} </el-descriptions-item>
-            <el-descriptions-item  label="Số vòng dây N1"> {{ counterStore.handleN1TC() }}</el-descriptions-item>
-            <el-descriptions-item  label="Đường kính dây d2">{{ counterStore.handleD2() }}</el-descriptions-item>
+            <el-descriptions-item  label="Điện áp vào U2 (Vol)"> {{ counterStore.dataInput.U2 }}</el-descriptions-item>
+            <el-descriptions-item  label="Dòng điện ra I2 (A)"> {{ counterStore.handleI2() }} </el-descriptions-item>
+            <el-descriptions-item  label="Số vòng dây N2 (Vg)"> {{ counterStore.handleNonN2Topic1() }}</el-descriptions-item>
+            <el-descriptions-item  label="Đường kính dây d2 (mm)">{{ counterStore.handleNonD2Topic1() }}</el-descriptions-item>
           </div>
           
           
           <div v-else-if="guiStore.numberTopic === 2">
             <el-descriptions-item label="Điện áp vào U2-1"> {{ counterStore.dataInput.U2_1 }} </el-descriptions-item>
             <el-descriptions-item label="Điện áp vào U2-2"> {{ counterStore.dataInput.U2_2 }} </el-descriptions-item>
-            <el-descriptions-item label="Dòng điện ra I2"> {{ counterStore.handleI2TypeTwo() }} </el-descriptions-item>
+            <el-descriptions-item label="Dòng điện ra I2-1"> {{ counterStore.dataInput.I2_1 }} </el-descriptions-item>
+            <el-descriptions-item label="Dòng điện ra I2-2"> {{ counterStore.dataInput.I2_2 }} </el-descriptions-item>
             <el-descriptions-item label="Số vòng dây N2-1"> {{ counterStore.handleN21() }} </el-descriptions-item>
             <el-descriptions-item label="Số vòng dây N2-2"> {{ counterStore.handleN22() }} </el-descriptions-item>
-            <el-descriptions-item label=" Đường kính dây d2"> {{ counterStore.handleD2() }} </el-descriptions-item>
+            <el-descriptions-item label=" Đường kính dây d2-1"> {{ counterStore.handleD21NonTopic2() }} </el-descriptions-item>
+            <el-descriptions-item label=" Đường kính dây d2-2"> {{ counterStore.handleD22NonTopic2() }} </el-descriptions-item>
           </div>
           
           
@@ -76,11 +86,19 @@ const handleClick = (tab) => {
             <el-descriptions-item  label="Điện áp vào U2-1"> {{ counterStore.dataInput.U2_1 }} </el-descriptions-item>
             <el-descriptions-item  label="Điện áp vào U2-2"> {{ counterStore.dataInput.U2_2 }} </el-descriptions-item>
             <el-descriptions-item  label="Điện áp vào U2-3"> {{ counterStore.dataInput.U2_3 }} </el-descriptions-item>
-            <el-descriptions-item  label="Dòng điện ra I2"> {{ counterStore.handleI2TypeThree() }} </el-descriptions-item>
-            <el-descriptions-item  label="Số vòng dây N2-1"> {{ counterStore.handleN21() }} </el-descriptions-item>
-            <el-descriptions-item  label="Số vòng dây N2-2"> {{ counterStore.handleN22() }} </el-descriptions-item>
-            <el-descriptions-item  label="Số vòng dây N2-3"> {{ counterStore.handleN23() }} </el-descriptions-item>
-            <el-descriptions-item  label=" Đường kính dây d2"> {{ counterStore.handleD2() }} </el-descriptions-item>
+            <el-descriptions-item  label="Dòng điện ra I2-1"> {{ counterStore.dataInput.I2_1 }} </el-descriptions-item>
+            <el-descriptions-item  label="Dòng điện ra I2-2"> {{ counterStore.dataInput.I2_2 }} </el-descriptions-item>
+            <el-descriptions-item  label="Dòng điện ra I2-3"> {{ counterStore.dataInput.I2_3 }} </el-descriptions-item>
+            
+            
+            <el-descriptions-item  label="Số vòng dây N2-1"> {{ counterStore.handleNDataNonTopic2(1) }} </el-descriptions-item>
+            <el-descriptions-item  label="Số vòng dây N2-2"> {{ counterStore.handleNDataNonTopic2(2) }} </el-descriptions-item>
+            <el-descriptions-item  label="Số vòng dây N2-3"> {{ counterStore.handleNDataNonTopic2(3) }} </el-descriptions-item>
+            
+            
+            <el-descriptions-item  label="Đường kính dây d2-1"> {{ counterStore.handleDTopic3(1) }} </el-descriptions-item>
+            <el-descriptions-item  label="Đường kính dây d2-2"> {{ counterStore.handleDTopic3(2) }} </el-descriptions-item>
+            <el-descriptions-item  label="Đường kính dây d2-3"> {{ counterStore.handleDTopic3(3) }} </el-descriptions-item>
           </div>
           
         </el-descriptions>
@@ -91,8 +109,21 @@ const handleClick = (tab) => {
           :column="1"
           border
         >
-          <el-descriptions-item  label="Công suất S1"> {{ counterStore.handleS1() }}</el-descriptions-item>
-          <el-descriptions-item  label="Công suất S2"> {{ counterStore.dataInput.S2 }} </el-descriptions-item>
+          <div v-if="guiStore.numberTopic === 1">
+            <el-descriptions-item  label="Công suất S1 (VA)"> {{ counterStore.handleS1NonTopic1() }}</el-descriptions-item>
+            <el-descriptions-item  label="Công suất S2 (VA)"> {{ counterStore.handleS2NonTopic1() }}</el-descriptions-item>
+          </div>
+          
+          <div v-else-if="guiStore.numberTopic === 2">
+            <el-descriptions-item  label="Công suất S1 (VA)"> {{ counterStore.handleS1NonTopic2() }}</el-descriptions-item>
+            <el-descriptions-item  label="Công suất S2 (VA)"> {{ counterStore.handleS2NonTopic2() }}</el-descriptions-item>
+          </div>
+          
+          <div v-else-if="guiStore.numberTopic === 3">
+            <el-descriptions-item  label="Công suất S1 (VA)"> {{ counterStore.handleS1NonTopic3() }}</el-descriptions-item>
+            <el-descriptions-item  label="Công suất S2 (VA)"> {{ counterStore.handleS2NonTopic3() }}</el-descriptions-item>
+          </div>
+          
       </el-descriptions>
     </el-tab-pane>
   </el-tabs>
@@ -101,17 +132,11 @@ const handleClick = (tab) => {
   
   <el-button style="width: 100%;" size="large" type="primary" @click="guiStore.navigateTo('/')">Quay về trang chủ</el-button>
 </div>
-
-<!-- No data -->
-<el-empty v-else :image-size="200"  :description="'Không có dữ liệu'"/>
 </template>
 
 <style lang="scss" scoped>
 .content {
  $seft: &;
- 
-
- 
   &__tab {
   
     &__item {
